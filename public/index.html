@@ -1,0 +1,78 @@
+<html>
+
+<head>
+  <title>Languagea Playground Test 10</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script
+          src="https://code.jquery.com/jquery-3.4.1.min.js"
+          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+          crossorigin="anonymous">
+  </script>
+</head>
+
+<body>
+  <h1>Language Playground Test 10</h1>
+  <label for="language-picker">Language:</label>
+  <select id="language-picker">
+    <option>JavaScript</option>
+    <option>C</option>
+  </select>
+  <div id="container" style="width:800px; height:300px; border:1px solid grey"></div>
+  <button onclick="submitCode()">Submit</button>
+  <div id="output">
+    <label for="output-text">Output:</label>
+    <textarea id="output-text">Sample
+    </textarea>
+  </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"
+        integrity="sha256-0SGl1PJNDyJwcV5T+weg2zpEMrh7xvlwO4oXgvZCeZk="
+        crossorigin="anonymous"></script>
+
+<script>
+  require.config({ paths: { 'vs': '/node_modules/monaco-editor/min/vs'}});
+  let editor = null;
+  let data_received = null;
+  let outputNumber = 1;
+
+  require(['vs/editor/editor.main'], function() {
+    editor = monaco.editor.create(document.getElementById('container'), {
+      value: ['function x() {',
+        '\tconsole.log("Hello World!");',
+        '}'].join('\n'),
+      language: 'javascript'
+    });
+  });
+
+  let submitCode = function () {
+    if(editor != null)
+    {
+      console.log(editor.getValue());
+      let code = JSON.stringify(editor.getValue());
+      $.ajax({
+        url: "http://localhost:3000/api/code",
+        type: "POST",
+        data: {
+          language: JSON.stringify(editor.getRawConfiguration().language),
+          code: editor.getValue()
+        },
+        dataType: "json",
+        success: function(result) {
+          console.log("Sent back: " + result);
+          document.getElementById('output-text').value += outputNumber.toString() + ': ' + result + '\n';
+          outputNumber++;
+        }
+      });
+/*      $.post("http://localhost:3000/api/code", {code: code}, (data, status) => {
+        if(status === 'success')
+        {
+          console.log("Sent back: " + data);
+          let output = document.getElementById('output');
+          data_received = JSON.parse(data);
+          output.innerText = data_received.stdout;
+        }
+      })*/
+    }
+  };
+</script>
+</html>

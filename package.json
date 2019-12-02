@@ -1,0 +1,26 @@
+{
+  "name": "language-playground-test12",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huntdog1541/language-playground-test12.git"
+  },
+  "author": "David Hunt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/huntdog1541/language-playground-test12/issues"
+  },
+  "homepage": "https://github.com/huntdog1541/language-playground-test12#readme",
+  "dependencies": {
+    "http-server": "^0.12.0",
+    "monaco-editor": "^0.18.1",
+    "express": "~4.17.1",
+    "body-parser": "^1.19.0",
+    "shelljs": "0.8.3"
+  }
+}
