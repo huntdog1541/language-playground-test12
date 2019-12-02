@@ -44,7 +44,7 @@
     });
   });
 
-  let submitCode = function () {
+/*  let submitCode = function () {
     if(editor != null)
     {
       console.log(editor.getValue());
@@ -63,7 +63,7 @@
           outputNumber++;
         }
       });
-/*      $.post("http://localhost:3000/api/code", {code: code}, (data, status) => {
+/!*      $.post("http://localhost:3000/api/code", {code: code}, (data, status) => {
         if(status === 'success')
         {
           console.log("Sent back: " + data);
@@ -71,8 +71,9 @@
           data_received = JSON.parse(data);
           output.innerText = data_received.stdout;
         }
-      })*/
+      })*!/
     }
-  };
+  };*/
 </script>
+<script src="javascript/websocket.js"></script>
 </html>

@@ -4,6 +4,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var shell = require('shelljs');
 var fs = require('fs');
+//var WebSocket = require('ws');
 
 var app = express();
 
@@ -12,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
-app.post('/api/code', (req, res) => {
+/*app.post('/api/code', (req, res) => {
     const code = req.body.code;
     const language = req.body.language;
     console.log("Language: " + language);
@@ -22,7 +23,7 @@ app.post('/api/code', (req, res) => {
     var output = runProcess(code);
     console.log("Output: " + output);
     res.end(response);
-})
+})*/
 
 // function runProcess() {
 //     var output = null;
@@ -58,7 +59,7 @@ app.post('/api/code', (req, res) => {
 } */
 
 function runProcess(code) {
-    
+    var out = null;
     fs.writeFile('test.js', code.replace(/^"|"$/g, ''), (error) => {
         if(error)
         {
@@ -67,16 +68,16 @@ function runProcess(code) {
         }        
     });
     //shell.exec('node --version');
-    /* shell.exec('node test.js', (code, output) => {
+     shell.exec('node test.js', { async: false }, (code, output) => {
         out = output;
-    }); */
+    });
     /*out = shell.exec('node test.js', function(code, stdout, stderr) {
         //out = stdout.toString();
         console.log('stdout: ' + stdout);
         //console.log('stderr: ' + stderr);
         return stdout.slice(0);
     });*/
-    var out = shell.exec('node test.js', { async: false } ).output;
+    //var out = shell.exec('node test.js', { async: false } ).output;
     console.log("Out from shell: " + JSON.stringify(out));
     return out;
 }
