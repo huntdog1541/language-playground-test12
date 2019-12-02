@@ -11,6 +11,11 @@ socket.addEventListener('open', function(event) {
 
 socket.addEventListener('message', function(event){
     console.log('Message from server: ', event.data);
+    let data = JSON.parse(event);
+    if(event.type.match("out"))
+    {
+        
+    }
 });
 
 socket.addEventListener('output', function(event) {
@@ -22,8 +27,8 @@ let submitCode = function () {
     if(editor != null)
     {
         console.log(editor.getValue());
-        var code = { type: "code", data: JSON.stringify(editor.getValue()) };
-        socket.send(code);
+        var code = { type: "code", data: editor.getValue() };
+        socket.send(JSON.stringify(code));
     }
 
 };

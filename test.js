@@ -1,1 +1,1 @@
-{"type":"intro"}
+console.log("Hello World!");

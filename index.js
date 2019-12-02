@@ -95,6 +95,7 @@ function onListening() {
 const wss = new WebSocket.Server({ server });
 
 let open_web_socket = null;
+let sendMessage = null;
 
 wss.on('connection', function connection(ws) {
   open_web_socket = ws;
@@ -103,15 +104,28 @@ wss.on('connection', function connection(ws) {
     // log the received message and send it back to the client
     let data = JSON.parse(message);
     console.log("Data: " + data.type);
-    console.log((new Date()) + ' - Received: %s', message);
-    ws.send(`Hello, you sent -> ${message}`);
-    execution_test(message);
+    if(data.type.match("intro"))
+    {
+      console.log("Welcoming connection");
+    }
+    else
+    {
+      console.log((new Date()) + ' - Received: %s', message);
+      ws.send(`Hello, you sent -> ${message}`);
+      runCode(data);
+    }
   });
   ws.on('code', function codeSent(message) {
     console.log('Code submitted: ' + message);
   });
 
-  // send immediately a feedback to the imcoming connection
+  sendMessage = function(message) {
+    if(open_web_socket != null && open_web_socket !== false)
+    {
+      ws.send(message);
+    }
+  };
+  // send immediately a feedback to the incoming connection
   ws.send('Hi there, I am a WebSocket server');
 });
 
@@ -119,6 +133,14 @@ wss.onclose = function(event) {
   console.log("WebSocket is closed now.");
   open_web_socket = false;
 };
+
+function runCode(data)
+{
+  if(data.type.match("code"))
+  {
+    execution_test(data.data)
+  }
+}
 
 function execution_test(code) {
   console.log("Executing test");
@@ -130,8 +152,9 @@ function execution_test(code) {
       throw error;
     }
   });
-  shell.exec('node test.js', {async:true}, (code, output) => {
-    out = output;
+  shell.exec('node test.js', {async:true}, (code, stdout, stderr) => {
+    let output = { type: "out", out: stdout, code: code, err: stderr };
+    sendMessage(JSON.stringify(output));
   });
   console.log("Out from shell: " + JSON.stringify(out));
   return out;
