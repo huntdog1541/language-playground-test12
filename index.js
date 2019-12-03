@@ -111,7 +111,8 @@ wss.on('connection', function connection(ws) {
     else
     {
       console.log((new Date()) + ' - Received: %s', message);
-      ws.send(`Hello, you sent -> ${message}`);
+      let formatMessage = JSON.stringify({type: 'message', message: `Hello, you sent -> ${message}`});
+      ws.send(formatMessage);
       runCode(data);
     }
   });
@@ -126,7 +127,7 @@ wss.on('connection', function connection(ws) {
     }
   };
   // send immediately a feedback to the incoming connection
-  ws.send('Hi there, I am a WebSocket server');
+  ws.send(JSON.stringify({type: 'message', message: 'Hi there, I am a WebSocket server'}));
 });
 
 wss.onclose = function(event) {

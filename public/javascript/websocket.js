@@ -11,10 +11,10 @@ socket.addEventListener('open', function(event) {
 
 socket.addEventListener('message', function(event){
     console.log('Message from server: ', event.data);
-    let data = JSON.parse(event);
-    if(event.type.match("out"))
+    let data = JSON.parse(event.data);
+    if(data.type.match("out"))
     {
-        
+        document.getElementById("output-text").value += data.out;
     }
 });
 
